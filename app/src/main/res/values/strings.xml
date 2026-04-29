@@ -3,6 +3,7 @@
     <string name="app_name">二维码扫描</string>
     <string name="scan_with_camera">相机扫码</string>
     <string name="scan_from_image">图片导入扫码</string>
+    <string name="tagline">轻松扫码，快速分享</string>
     <string name="scan_prompt">将二维码对准扫描框</string>
     <string name="scan_result_label">扫描结果</string>
     <string name="copy_to_clipboard">一键复制</string>

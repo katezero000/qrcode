@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@color/background">
+    android:padding="20dp"
+    android:background="@drawable/screen_background">
 
     <TextView
         android:layout_width="wrap_content"
@@ -13,7 +13,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/primary"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="12dp" />
 
     <EditText
         android:id="@+id/et_result"
@@ -34,6 +34,8 @@
         android:layout_height="56dp"
         android:text="@string/copy_to_clipboard"
         android:textSize="16sp"
-        android:backgroundTint="@color/primary" />
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@drawable/button_primary" />
 
 </LinearLayout>
