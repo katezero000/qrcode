@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
         binding.btnScanCamera.setOnClickListener {
             checkCameraPermissionAndScan()
@@ -103,6 +104,7 @@ class MainActivity : AppCompatActivity() {
             inputStream?.close()
             if (bitmap != null) {
                 val result = decodeBitmapQR(bitmap)
+                bitmap.recycle()
                 if (result != null) {
                     openResultActivity(result)
                 } else {
