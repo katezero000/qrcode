@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">二维码扫描</string>
+    <string name="scan_with_camera">相机扫码</string>
+    <string name="scan_from_image">图片导入扫码</string>
+    <string name="scan_prompt">将二维码对准扫描框</string>
+    <string name="scan_result_label">扫描结果</string>
+    <string name="copy_to_clipboard">一键复制</string>
+    <string name="copied_to_clipboard">已复制到剪贴板</string>
+    <string name="nothing_to_copy">没有内容可复制</string>
+    <string name="no_qr_found">未能识别二维码，请重试</string>
+    <string name="image_read_error">读取图片失败，请重试</string>
+    <string name="camera_permission_denied">相机权限被拒绝，无法使用相机扫码</string>
+    <string name="result_title">扫描结果</string>
+    <string name="clipboard_label">扫码结果</string>
+</resources>
