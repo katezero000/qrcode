@@ -1,0 +1,3 @@
+# Add project specific ProGuard rules here.
+-keep class com.journeyapps.barcodescanner.** { *; }
+-keep class com.google.zxing.** { *; }
