@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.qrscanner.databinding.ActivityCameraScanBinding
+import com.journeyapps.barcodescanner.CameraPreview
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.camera.CameraConfigurationUtils
@@ -38,7 +39,7 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
         binding.buttonTorch.isVisible = hasFlash
 
         binding.barcodeScanner.barcodeView.addStateListener(object :
-            com.journeyapps.barcodescanner.CameraPreview.StateListener {
+            CameraPreview.StateListener {
             override fun previewSized() = Unit
 
             override fun previewStarted() {
@@ -110,7 +111,7 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
         binding.barcodeScanner.changeCameraParameters { params ->
             val supportsZoom = params.isZoomSupported
             val ratios = params.zoomRatios
-            val maxRatio = if (supportsZoom && ratios != null && ratios.isNotEmpty()) {
+            val maxRatio = if (supportsZoom && ratios != null && ratios.isNotEmpty() && params.maxZoom < ratios.size) {
                 ratios[params.maxZoom] / ZOOM_RATIO_DIVISOR
             } else {
                 1.0
