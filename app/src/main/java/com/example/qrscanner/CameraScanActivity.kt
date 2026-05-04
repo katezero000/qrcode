@@ -40,7 +40,7 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
 
         binding.barcodeScanner.barcodeView.addStateListener(object :
             CameraPreview.StateListener {
-            override fun previewSized() = Unit
+            override fun previewSized() {}
 
             override fun previewStarted() {
                 if (!capabilitiesLoaded) {
@@ -49,11 +49,11 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
                 }
             }
 
-            override fun previewStopped() = Unit
+            override fun previewStopped() {}
 
-            override fun cameraError(error: Exception) = Unit
+            override fun cameraError(error: Exception) {}
 
-            override fun cameraClosed() = Unit
+            override fun cameraClosed() {}
         })
 
         updateTorchLabel()
@@ -111,7 +111,7 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
         binding.barcodeScanner.changeCameraParameters { params ->
             val supportsZoom = params.isZoomSupported
             val ratios = params.zoomRatios
-            val maxRatio = if (supportsZoom && ratios != null && ratios.isNotEmpty() && params.maxZoom < ratios.size) {
+            val maxRatio = if (supportsZoom && ratios != null && ratios.isNotEmpty() && params.maxZoom in ratios.indices) {
                 ratios[params.maxZoom] / ZOOM_RATIO_DIVISOR
             } else {
                 1.0
