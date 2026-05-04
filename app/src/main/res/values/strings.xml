@@ -13,4 +13,10 @@
     <string name="camera_permission_denied">相机权限被拒绝，无法使用相机扫码</string>
     <string name="result_title">扫描结果</string>
     <string name="clipboard_label">扫码结果</string>
+    <string name="torch_on">开启手电筒</string>
+    <string name="torch_off">关闭手电筒</string>
+    <string name="zoom_in">放大</string>
+    <string name="zoom_out">缩小</string>
+    <string name="zoom_ratio_format">%.1fx</string>
+    <string name="zoom_ratio_default">1.0x</string>
 </resources>
