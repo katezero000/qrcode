@@ -6,4 +6,5 @@
     <color name="text_primary">#212121</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="scan_overlay_background">#66000000</color>
 </resources>
