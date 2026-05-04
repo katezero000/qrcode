@@ -62,7 +62,7 @@ jobs:
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
             echo "name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
           else
-            echo "name=v1.0-$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+            echo "name=v1.1-$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
           fi
 
       - name: Create GitHub Release
