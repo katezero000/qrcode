@@ -66,6 +66,10 @@ class MainActivity : AppCompatActivity() {
         binding.btnScanImage.setOnClickListener {
             openImagePicker()
         }
+
+        binding.btnScanHistory.setOnClickListener {
+            openHistory()
+        }
     }
 
     private fun checkCameraPermissionAndScan() {
@@ -134,8 +138,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openResultActivity(content: String) {
+        ScanHistoryStore.addEntry(this, content)
         val intent = Intent(this, ScanResultActivity::class.java)
         intent.putExtra(ScanResultActivity.EXTRA_RESULT, content)
+        startActivity(intent)
+    }
+
+    private fun openHistory() {
+        val intent = Intent(this, ScanHistoryActivity::class.java)
         startActivity(intent)
     }
 }

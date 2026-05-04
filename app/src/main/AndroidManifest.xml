@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.QRScanner.AppCompat">
+        android:theme="@style/Theme.QRScanner">
         <activity
             android:name=".CameraScanActivity"
             android:exported="false" />
@@ -23,5 +23,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ScanResultActivity" android:exported="false" />
+        <activity android:name=".ScanHistoryActivity" android:exported="false" />
     </application>
 </manifest>

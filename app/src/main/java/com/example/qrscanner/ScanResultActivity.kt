@@ -20,9 +20,7 @@ class ScanResultActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityScanResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = getString(R.string.result_title)
+        binding.toolbar.setNavigationOnClickListener { finish() }
 
         val result = intent.getStringExtra(EXTRA_RESULT) ?: ""
         binding.etResult.setText(result)
@@ -38,10 +36,5 @@ class ScanResultActivity : AppCompatActivity() {
                 Toast.makeText(this, getString(R.string.nothing_to_copy), Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return true
     }
 }

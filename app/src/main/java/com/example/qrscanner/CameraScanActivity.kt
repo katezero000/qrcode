@@ -3,6 +3,7 @@ package com.example.qrscanner
 import android.content.pm.PackageManager
 import android.hardware.Camera
 import android.os.Bundle
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.qrscanner.databinding.ActivityCameraScanBinding
@@ -11,6 +12,7 @@ import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.camera.CameraConfigurationUtils
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.math.roundToInt
 
 class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListener {
 
@@ -34,8 +36,19 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
         captureManager.decode()
 
         binding.buttonTorch.setOnClickListener { toggleTorch() }
-        binding.buttonZoomIn.setOnClickListener { updateZoom(ZOOM_STEP) }
-        binding.buttonZoomOut.setOnClickListener { updateZoom(-ZOOM_STEP) }
+        binding.seekZoom.max = ZOOM_SEEKBAR_STEPS
+        binding.seekZoom.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    updateZoomFromProgress(progress)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+        binding.zoomControls.isVisible = false
 
         val hasFlash = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)
         binding.buttonTorch.isVisible = hasFlash
@@ -58,7 +71,7 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
         })
 
         updateTorchLabel()
-        updateZoomLabel()
+        updateZoomUi()
     }
 
     override fun onResume() {
@@ -116,14 +129,14 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
                 maxZoomRatio = maxRatio.coerceAtLeast(1.0)
                 binding.zoomControls.isVisible = supportsZoom && maxZoomRatio > 1.0
                 zoomRatio = zoomRatio.coerceIn(1.0, maxZoomRatio)
-                updateZoomLabel()
+                updateZoomUi()
             }
             params
         }
     }
 
-    private fun updateZoom(delta: Double) {
-        val newRatio = (zoomRatio + delta).coerceIn(1.0, maxZoomRatio)
+    private fun updateZoomFromProgress(progress: Int) {
+        val newRatio = progressToRatio(progress)
         if (newRatio != zoomRatio) {
             zoomRatio = newRatio
             applyZoom()
@@ -135,11 +148,17 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
             CameraConfigurationUtils.setZoom(params, zoomRatio)
             params
         }
-        updateZoomLabel()
+        updateZoomUi()
     }
 
-    private fun updateZoomLabel() {
+    private fun updateZoomUi() {
         binding.textZoom.text = getString(R.string.zoom_ratio_format, zoomRatio)
+        if (maxZoomRatio > 1.0) {
+            val progress = ratioToProgress(zoomRatio)
+            if (binding.seekZoom.progress != progress) {
+                binding.seekZoom.progress = progress
+            }
+        }
     }
 
     private fun updateTorchLabel() {
@@ -165,8 +184,24 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
         }
     }
 
+    private fun progressToRatio(progress: Int): Double {
+        if (maxZoomRatio <= 1.0) {
+            return 1.0
+        }
+        val fraction = progress.toDouble() / ZOOM_SEEKBAR_STEPS.toDouble()
+        return (1.0 + (maxZoomRatio - 1.0) * fraction).coerceIn(1.0, maxZoomRatio)
+    }
+
+    private fun ratioToProgress(ratio: Double): Int {
+        if (maxZoomRatio <= 1.0) {
+            return 0
+        }
+        val fraction = (ratio - 1.0) / (maxZoomRatio - 1.0)
+        return (fraction * ZOOM_SEEKBAR_STEPS).roundToInt().coerceIn(0, ZOOM_SEEKBAR_STEPS)
+    }
+
     private companion object {
-        const val ZOOM_STEP = 0.25
         const val ZOOM_RATIO_DIVISOR = 100.0
+        const val ZOOM_SEEKBAR_STEPS = 100
     }
 }
