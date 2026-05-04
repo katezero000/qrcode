@@ -114,7 +114,7 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
             val maxRatio = extractMaxZoomRatio(params)
             runOnUiThread {
                 maxZoomRatio = maxRatio.coerceAtLeast(1.0)
-                binding.zoomControls.isVisible = supportsZoom
+                binding.zoomControls.isVisible = supportsZoom && maxZoomRatio > 1.0
                 zoomRatio = zoomRatio.coerceIn(1.0, maxZoomRatio)
                 updateZoomLabel()
             }
