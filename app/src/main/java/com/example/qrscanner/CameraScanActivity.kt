@@ -16,7 +16,6 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
     private var torchOn = false
     private var zoomRatio = 1.0
     private var maxZoomRatio = 1.0
-    private val zoomStep = 0.25
     private var capabilitiesLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +31,8 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
         captureManager.decode()
 
         binding.buttonTorch.setOnClickListener { toggleTorch() }
-        binding.buttonZoomIn.setOnClickListener { updateZoom(zoomStep) }
-        binding.buttonZoomOut.setOnClickListener { updateZoom(-zoomStep) }
+        binding.buttonZoomIn.setOnClickListener { updateZoom(ZOOM_STEP) }
+        binding.buttonZoomOut.setOnClickListener { updateZoom(-ZOOM_STEP) }
 
         val hasFlash = packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)
         binding.buttonTorch.isVisible = hasFlash
@@ -112,7 +111,7 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
             val supportsZoom = params.isZoomSupported
             val ratios = params.zoomRatios
             val maxRatio = if (supportsZoom && ratios != null && ratios.isNotEmpty()) {
-                ratios[params.maxZoom] / 100.0
+                ratios[params.maxZoom] / ZOOM_RATIO_DIVISOR
             } else {
                 1.0
             }
@@ -152,5 +151,10 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
         } else {
             getString(R.string.torch_on)
         }
+    }
+
+    private companion object {
+        const val ZOOM_STEP = 0.25
+        const val ZOOM_RATIO_DIVISOR = 100.0
     }
 }
