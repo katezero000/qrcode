@@ -3,35 +3,33 @@ package com.example.qrscanner
 import android.content.pm.PackageManager
 import android.hardware.Camera
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.qrscanner.databinding.ActivityCameraScanBinding
 import com.journeyapps.barcodescanner.CameraPreview
-import com.journeyapps.barcodescanner.CaptureManager
+import com.journeyapps.barcodescanner.CaptureActivity
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.camera.CameraConfigurationUtils
 import java.util.concurrent.atomic.AtomicBoolean
 
-class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListener {
+class CameraScanActivity : CaptureActivity(), DecoratedBarcodeView.TorchListener {
 
     private lateinit var binding: ActivityCameraScanBinding
-    private lateinit var captureManager: CaptureManager
     private var torchOn = false
     private var zoomRatio = 1.0
     private var maxZoomRatio = 1.0
     private val capabilitiesLoaded = AtomicBoolean(false)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initializeContent(): DecoratedBarcodeView {
         binding = ActivityCameraScanBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        supportActionBar?.hide()
+        return binding.barcodeScanner
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        actionBar?.hide()
 
         binding.barcodeScanner.setTorchListener(this)
-
-        captureManager = CaptureManager(this, binding.barcodeScanner)
-        captureManager.initializeFromIntent(intent, savedInstanceState)
-        captureManager.decode()
 
         binding.buttonTorch.setOnClickListener { toggleTorch() }
         binding.buttonZoomIn.setOnClickListener { updateZoom(ZOOM_STEP) }
@@ -59,35 +57,6 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
 
         updateTorchLabel()
         updateZoomLabel()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        captureManager.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        captureManager.onPause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        captureManager.onDestroy()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        captureManager.onSaveInstanceState(outState)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        captureManager.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     override fun onTorchOn() {
