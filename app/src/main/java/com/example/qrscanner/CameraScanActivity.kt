@@ -1,6 +1,7 @@
 package com.example.qrscanner
 
 import android.content.pm.PackageManager
+import android.hardware.Camera
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -9,6 +10,7 @@ import com.journeyapps.barcodescanner.CameraPreview
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.camera.CameraConfigurationUtils
+import java.util.concurrent.atomic.AtomicBoolean
 
 class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListener {
 
@@ -17,7 +19,7 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
     private var torchOn = false
     private var zoomRatio = 1.0
     private var maxZoomRatio = 1.0
-    private var capabilitiesLoaded = false
+    private val capabilitiesLoaded = AtomicBoolean(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +45,7 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
             override fun previewSized() {}
 
             override fun previewStarted() {
-                if (!capabilitiesLoaded) {
-                    capabilitiesLoaded = true
+                if (capabilitiesLoaded.compareAndSet(false, true)) {
                     loadCameraCapabilities()
                 }
             }
@@ -110,12 +111,7 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
     private fun loadCameraCapabilities() {
         binding.barcodeScanner.changeCameraParameters { params ->
             val supportsZoom = params.isZoomSupported
-            val ratios = params.zoomRatios
-            val maxRatio = if (supportsZoom && ratios != null && ratios.isNotEmpty() && params.maxZoom in ratios.indices) {
-                ratios[params.maxZoom] / ZOOM_RATIO_DIVISOR
-            } else {
-                1.0
-            }
+            val maxRatio = extractMaxZoomRatio(params)
             runOnUiThread {
                 maxZoomRatio = maxRatio.coerceAtLeast(1.0)
                 binding.zoomControls.isVisible = supportsZoom
@@ -151,6 +147,21 @@ class CameraScanActivity : AppCompatActivity(), DecoratedBarcodeView.TorchListen
             getString(R.string.torch_off)
         } else {
             getString(R.string.torch_on)
+        }
+    }
+
+    private fun extractMaxZoomRatio(params: Camera.Parameters): Double {
+        val ratios = params.zoomRatios
+        val maxZoom = params.maxZoom
+        return if (params.isZoomSupported &&
+            ratios != null &&
+            ratios.isNotEmpty() &&
+            maxZoom >= 0 &&
+            maxZoom in ratios.indices
+        ) {
+            ratios[maxZoom] / ZOOM_RATIO_DIVISOR
+        } else {
+            1.0
         }
     }
 
