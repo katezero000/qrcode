@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">二维码扫描</string>
+    <string name="scan_subtitle">直观简洁的二维码工具</string>
     <string name="scan_with_camera">相机扫码</string>
     <string name="scan_from_image">图片导入扫码</string>
+    <string name="scan_history">扫码历史</string>
     <string name="scan_prompt">将二维码对准扫描框</string>
     <string name="scan_result_label">扫描结果</string>
     <string name="copy_to_clipboard">一键复制</string>
@@ -17,6 +19,9 @@
     <string name="torch_off">关闭手电筒</string>
     <string name="zoom_in">放大</string>
     <string name="zoom_out">缩小</string>
+    <string name="zoom_label">缩放</string>
     <string name="zoom_ratio_format">%.1fx</string>
     <string name="zoom_ratio_default">1.0x</string>
+    <string name="history_title">扫码历史</string>
+    <string name="history_empty">暂无扫码记录</string>
 </resources>
