@@ -2,7 +2,7 @@ name: Build and Release APK
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 'copilot/**' ]
     tags:
       - 'v*'
   pull_request:
@@ -50,23 +50,23 @@ jobs:
           path: app/build/outputs/apk/release/*.apk
 
       - name: Rename APK
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') || startsWith(github.ref, 'refs/heads/copilot/')
         run: |
           mkdir -p release_artifacts
           cp app/build/outputs/apk/release/*.apk release_artifacts/QRScanner-release.apk
 
       - name: Get version name
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') || startsWith(github.ref, 'refs/heads/copilot/')
         id: version
         run: |
           if [[ "${{ github.ref }}" == refs/tags/* ]]; then
             echo "name=${{ github.ref_name }}" >> $GITHUB_OUTPUT
           else
-            echo "name=v1.0-$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+            echo "name=v1.1-$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
           fi
 
       - name: Create GitHub Release
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') || startsWith(github.ref, 'refs/heads/copilot/')
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.name }}
